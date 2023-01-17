@@ -2,7 +2,7 @@ import random
 
 class Hangman:
     def __init__(self):
-        self.words = ["python", "programming", "computer", "science", "coding"]
+        self.words = ["Manush", "Muscle", "Mandem", "Ripped", "Jacked"]
         self.word = random.choice(self.words)
         self.guessed_letters = []
         self.incorrect_guesses = 0
@@ -36,7 +36,6 @@ class Hangman:
             print("Invalid input. Please enter a single letter.")
             self.get_guess()
         else:
-            self.guessed_letters.append(guess)
             if guess not in self.word:
                 self.incorrect_guesses += 1
                 print("Incorrect.")
@@ -44,6 +43,7 @@ class Hangman:
                 print(f"You have {remaining_guesses} guesses left.")
             else:
                 print("Correct.")
+            self.guessed_letters.append(guess)
 
     def check_win(self):
         for letter in self.word:
