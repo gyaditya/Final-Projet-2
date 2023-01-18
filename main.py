@@ -29,7 +29,7 @@ class Hangman:
     #Handle the user Inputs and Get the win
     def getGuess(self):
         if self.checkWin():
-            print("You win!")
+            print("You win")
             self.gameOver = True
             return
         guess = input("Guess a letter: ").lower()
@@ -42,14 +42,14 @@ class Hangman:
             if guess in self.word:
                 print("Correct.")
                 if self.checkWin():
-                    print("You win!")
+                    print("You win")
                     self.gameOver = True
             else:
                 self.incorrectGuesses += 1
                 print("Incorrect.")
                 remainingGuesses = self.maxIncorrectGuesses - self.incorrectGuesses
                 if remainingGuesses == 0:
-                    print("You lose! The word was " + self.word)
+                    print("You lose. The word was " + self.word)
                     self.gameOver = True
                 else:
                     print(f"You have {remainingGuesses} guesses left.")
