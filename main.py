@@ -1,6 +1,8 @@
 import random
 
 class Hangman:
+    
+    #Initalize
     def __init__(self, words):
         self.words = words
         self.word = random.choice(self.words).lower()
@@ -8,12 +10,14 @@ class Hangman:
         self.incorrectGuesses = 0
         self.maxIncorrectGuesses = 13
         self.gameOver = False
-
+    
+    #Play the Game
     def play(self):
         while not self.gameOver:
             self.displayWord()
             self.getGuess()
-
+    
+    #Display the words
     def displayWord(self):
         for i in range(len(self.word)):
             if self.word[i] in self.guessedLetters:
@@ -21,7 +25,8 @@ class Hangman:
             else:
                 print("_", end=" ")
         print()
-
+    
+    #Handle the user Inputs and Get the win
     def getGuess(self):
         if self.checkWin():
             print("You win!")
@@ -48,7 +53,7 @@ class Hangman:
                     self.gameOver = True
                 else:
                     print(f"You have {remainingGuesses} guesses left.")
-
+    #Check the win
     def checkWin(self):
         for i in range(len(self.word)):
             if self.word[i] not in self.guessedLetters:
@@ -57,7 +62,7 @@ class Hangman:
 
 
 
-
+#List of the words
 words = ["Ripped", "Jacked", "Money", "Dough", "Life"]
 
 game = Hangman(words)
