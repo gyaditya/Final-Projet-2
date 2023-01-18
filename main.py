@@ -1,64 +1,65 @@
+import json
 import random
 
-class Hangman:
-    def __init__(self, words):
-        self.words = words
-        self.word = random.choice(self.words).lower()
-        self.guessedLetters = []
-        self.incorrectGuesses = 0
-        self.maxIncorrectGuesses = 6
-        self.gameOver = False
+def getUserChoice():
+    options = ["rock", "paper", "scissors"]
+    userInput = input("Enter your choice (rock, paper, scissors) or press 'e' to exit the game: ").lower()
+    while userInput not in options and userInput != 'e':
+        print("Invalid choice. Please enter rock, paper, scissors or press 'e' to exit the game.")
+        userInput = input("Enter your choice (rock, paper, scissors) or press 'e' to exit the game: ").lower()
+    return userInput
 
-    def play(self):
-        while not self.gameOver:
-            self.displayWord()
-            self.getGuess()
+def getComputerChoice():
+    options = ["rock", "paper", "scissors"]
+    return random.choice(options)
 
-    def displayWord(self):
-        for i in range(len(self.word)):
-            if self.word[i] in self.guessedLetters:
-                print(self.word[i], end=" ")
-            else:
-                print("_", end=" ")
-        print()
+def getRoundResult(userInput, computerChoice):
+    if userInput == computerChoice:
+        return "tie"
+    elif userInput == "rock" and computerChoice == "scissors":
+        return "win"
+    elif userInput == "paper" and computerChoice == "rock":
+        return "win"
+    elif userInput == "scissors" and computerChoice == "paper":
+        return "win"
+    else:
+        return "lose"
 
-    def getGuess(self):
-        if self.checkWin():
+def playGame():
+    winStreak = 0
+    try:
+        file = open("highscore.json", "r")
+        dataStr = file.read()
+        file.close()
+        highscore = json.loads(dataStr)["highscore"]
+    except:
+        highscore = 0
+        
+    while True:
+        userInput = getUserChoice()
+        if userInput == "e":
+            break
+        computerChoice = getComputerChoice()
+        print("Computer chose:", computerChoice)
+        roundResult = getRoundResult(userInput, computerChoice)
+
+        if roundResult == "tie":
+            print("It's a tie!")
+        elif roundResult == "win":
             print("You win!")
-            self.gameOver = True
-            return
-        guess = input("Guess a letter: ").lower()
-        if len(guess) > 1 or not guess.isalpha():
-            print("Invalid input. Please enter a single letter.")
-        elif guess in self.guessedLetters:
-            print("You already guessed that letter. Try again.")
+            winStreak += 1
         else:
-            self.guessedLetters.append(guess)
-            if guess in self.word:
-                print("Correct.")
-                if self.checkWin():
-                    print("You win!")
-                    self.gameOver = True
+            if winStreak == 0:
+                print("You lose")
             else:
-                self.incorrectGuesses += 1
-                print("Incorrect.")
-                remainingGuesses = self.maxIncorrectGuesses - self.incorrectGuesses
-                if remainingGuesses == 0:
-                    print("You lose! The word was " + self.word)
-                    self.gameOver = True
-                else:
-                    print(f"You have {remainingGuesses} guesses left.")
+                print("You lost with a streak of", winStreak)
+            winStreak = 0
 
-    def checkWin(self):
-        for i in range(len(self.word)):
-            if self.word[i] not in self.guessedLetters:
-                return False    
-        return True
+        if winStreak > highscore:
+            highscore = winStreak
+            print("New high score! Your win streak is", winStreak)
+            with open("highscore.json", "w") as f:
+                json.dump({"highscore": highscore}, f)
+    print("Exiting Game")
 
-
-
-
-words = ["Ripped", "Jacked", "Money", "Dough", "Life"]
-
-game = Hangman(words)
-game.play()
+playGame()
